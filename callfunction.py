@@ -1,13 +1,15 @@
-from newcal import calcy
+from newcal import Calcy
 
-class calculation:
+class Calculation:
     def get():
         print('calculations')
+calculator = Calculation
+calculator.get()
 
-n = int(input('Enter:'))
-print('Enter ' + str(n) + ' Numbers:')
+print("Enter Number: " )
+n = int(input())
 
-z = '+','-','*','/'
+z = "+","-","*","/"
 
 result = 0
 
@@ -15,33 +17,28 @@ for i in range(n):
 
     num = int(input('Numbers: '))
     z = input('Operator: ')
-    # b = int(input('Numbers: '))
     if z == '+':
         if i == 0:
-            num = result = num
+            result = num
         else:
-            result =  calcy.add(result,add)
-        print(result)
+            result =  Calcy.add(result,num)
        
     if z == '-':
         if i == 0:
             result = num
         else:
-            result = calcy.sub(result,sub)
-        print(result)
+            result = Calcy.sub(result,num)
         
     if z == '*':
         if i == 0:
             result = num
         else:
-            result = calcy.multi(result,multi)
-        print(result)
+            result = Calcy.multi(result,num)
         
     if z == '/':
         if i == 0:
             result = num
         else:
-            result = calcy.divide(result,divide)
-        print(result)
-        
+            result = Calcy.divide(result,num)
+print(result)   
 
