@@ -1,0 +1,98 @@
+h1{
+    text-align: center;
+    color: blue;
+    border-radius: 10px;
+}
+
+p{
+    font-size: 50px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+a{
+    font-size: 40px;
+}
+
+img{
+    width: auto;
+    height: auto;
+}
+
+h2{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background-color: aqua;
+}
+
+h3{
+    font-weight: bold;
+    color: blueviolet;
+    padding-left: 15px;
+    margin: 50px;
+}
+
+a:link{
+    color: aqua;
+    background-color: blueviolet;
+    text-decoration: none;
+}
+a:visited{
+    color: aquamarine;
+    background-color: transparent;
+    text-decoration: none;
+}
+
+a:hover{
+    color: red;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+a:active{
+    color: yellow;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+/* body{ 
+    background-image: url(Image1.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;  
+    background-color: antiquewhite;
+}  */
+
+table{
+    margin-top: 10px;
+    border-radius: 13px;
+    border-left: 5px solid;
+    border-top: 10px dashed ;
+    border-bottom: 5px ridge;
+    border-right: 5px groove;
+    border-right-color: blue;
+    border-left-color: red;
+    border-top-color: yellowgreen;
+    border-bottom-color: blueviolet;
+    margin-left: 450px;
+}
+
+tr,th{
+    border: 5px inset red;
+    border-radius: 13px;
+}
+
+td{
+    border: 5px outset green;
+    border-radius: 13px;
+}
+
+tr:nth-child(even) {
+    background-color: rgb(153, 179, 129);
+}
+  
+th:nth-child(even),td:nth-child(even) {
+    background-color: rgb(0, 158, 221);
+}
+
+tr:hover{
+    background-color: antiquewhite;
+}

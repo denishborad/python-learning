@@ -1,0 +1,122 @@
+form{
+    margin: 200px;
+    border: 3px solid goldenrod;
+}
+header{
+    padding-top: 30px;
+    text-align: center;
+}
+header label input{
+    margin: auto;
+    border: none;
+    box-shadow: 0px 2px 0px 0px gray;
+    width: 30%;
+    color: gray;
+    font-size: 1em;
+    outline: none;
+}
+.lab input{
+    margin: auto;
+    border: none;
+    box-shadow: 0px 2px 0px 0px gray;
+    width: 40%;
+    color: gray;
+    font-size: 1em;
+    outline: none;
+}
+img.avatar{
+    width: 130px;
+    height: 150px;
+    margin-left: 300px;
+}
+section{
+    text-align: right;
+    margin-right: 90px;
+    margin-top: -100px;
+}
+h1{
+    text-align: center;
+}
+hr{
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-top: 20px;
+}
+.lab{
+    margin-left: 30px;
+}
+
+h3, p{
+    margin-left: 30px;
+}
+
+pre{
+    margin-left: 50px;
+}
+
+.undercontainer{
+    border: 2px solid gray;
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.undercontainer input{
+    margin: auto;
+    text-align: center;
+    border: none;
+    box-shadow: 0px 2px 0px 0px gray;
+    width: 30%;
+    color: gray;
+    font-size: 1em;
+    outline: none;
+    font-display: bold;
+}
+
+
+/* table{
+    margin-left: 30px;
+}
+table input{
+    margin: auto;
+    text-align: center;
+    border: none;
+    background: whitesmoke;
+    box-shadow: 0px 2px 0px 0px gray;
+    width: 20%;
+    color: gray;
+    font-size: 1em;
+    outline: none;
+} */
+/*
+
+
+table .regcontainer{
+    text-align: center;
+}
+
+td{
+    padding-top: 10px;
+}
+
+
+
+table td input{
+    border: none;
+    background: whitesmoke;
+    box-shadow: 0px 2px 0px 0px gray;
+    width: 100%;
+    color: gray;
+    font-size: 1em;
+    outline: none;
+}  */
+/* 
+label input{
+    border: none;
+    background: none;
+    box-shadow: 0px 2px 0px 0px white;
+    width: 50%;
+    color: white;
+    font-size: 1em;
+    outline: none;
+} */
