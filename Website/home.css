@@ -1,0 +1,243 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+.container{
+    width: 100%;
+    height: 100vh;
+    background-image: linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url(bg.jpg);
+    background-position: center;
+    background-size: cover;
+    padding-left: 8%;
+    padding-right: 8%;
+    box-sizing: border-box;
+}
+/* .navbar{
+    height: 12%;
+    display: flex;
+    align-items: center;
+} */
+/* .logo{
+    width: 50px;
+    cursor: pointer;
+} */
+/* .menu-icon{
+    width: 30px;
+    cursor: pointer;
+    margin-left: 40px;
+}
+nav{
+    flex: 1;
+    text-align: right;
+}
+nav ul li{
+    list-style: none;
+    display: inline-block;
+    margin-left: 60px;
+}
+nav ul li a{
+    text-decoration: none;
+    color: #fff;
+    font-size: 13px;
+} */
+.row{
+    display: flex;
+    height: 88%;
+    align-items: center;
+}
+.col{
+    flex-basis: 50%;
+}
+h1{
+    color: #fff;
+    font-size: 80px;
+}
+p{
+    color: #fff;
+    font-size: 11px;
+    line-height: 15px;
+}
+button{
+    width: 180px;
+    color: #000;
+    font-size: 12px;
+    padding: 12px 0;
+    background: #fff;
+    border: 0 ;
+    border-radius: 20px;
+    outline: none;
+    margin-top: 30px;
+}
+.card{
+    width: 200px;
+    height: 230px;
+    display: inline-block;
+    border-radius: 10px;
+    padding: 15px 25px;
+    cursor: pointer;
+    margin: 10px 15px;
+    background-position: center;
+    background-size: cover;
+}
+.card1{
+    background-image: url(bg2.jpg);
+}
+.card2{
+    background-image: url(AI\ Bagawat.jpg);
+}
+.card3{
+    background-image: url(Pyramid\ of\ Giza.jpg);
+}
+.card4{
+    background-image: url(kalahari\ desert.jpg);
+}
+.card:hover{
+    transform: translateY(-10px);
+}
+h5{
+    color: #fff;
+    text-shadow: 0 0 5px green;
+}
+.card p{
+    text-shadow: 0 0 5px green;
+    font-size: 10px;
+}
+.btn{
+    text-decoration: none;
+    position: absolute;
+    background: linear-gradient(to right, #ff105f, #ffad06);
+    border-radius: 30px;
+    transition: .5s;
+    font-size: 20px;
+    color: #fff;
+
+}.header{
+    height: 15%;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    border-bottom: 2px solid #fff;
+}
+
+.logo{
+    width: 150px;
+    cursor: pointer;
+    margin-top: -10px;
+}
+
+.navbar{
+    text-align: right;
+    flex: 1;
+}
+
+.navbar a{
+    padding: 6px 20px;
+    text-decoration: none;
+    color: antiquewhite;
+    margin-left: 20px;
+    font-size: 20px;
+    font-weight: bolder;
+    border: 2px solid red;
+}
+.navbar a:hover{
+    color: greenyellow;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.container1{
+    max-width: 1170px;
+    margin: auto;
+} 
+.container1 h1{
+    text-align: center;
+    color: #fff;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    margin-top: -70px;
+    font-size: 40px;
+}
+/* .row{
+    display:flex;
+    flex-wrap: wrap;
+} */
+ul{
+    list-style: none;
+}
+.footer{
+    background-color: black;
+    padding: 70px 0;
+}
+.footer-col{
+    width: 25%;
+    padding: 0 30px;
+}
+.footer-col h4{
+    font-size: 18px;
+    color: #ffffff;
+    text-transform: capitalize;
+    margin-bottom: 30px;
+    font-weight: 500;
+    position: relative;
+}
+.footer-col h4::before{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    background-color: #e91e63;
+    height: 2px;
+    box-sizing: border-box;
+    width: 50px;
+}
+.footer-col ul li:not(:last-child){
+    margin-bottom: 10px;
+}
+.footer-col ul li a{
+    font-size: 16px;
+    text-transform: capitalize;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 300;
+    color: #bbbbbb;
+    display: block;
+    transition: all 0.3s ease;
+}
+.footer-col ul li a:hover{
+    color: #ffffff;
+    padding-left: 8px;
+}
+.footer-col .social-links a{
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin: 0 10px 10px 0;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+    color: #ffffff;
+    transition: all 0.5s ease;
+}
+.footer-col .social-links a :hover{
+    color: #24262b;
+    background-color: #ffffff;
+}
+
+/* REsponsive */
+@media(max-width: 767px){
+    .footer-col{
+        width: 50%;
+        margin-bottom: 30px;
+    }
+}
+
+@media(max-width: 574px){
+    .footer-col{
+        width: 100%;
+    }
+}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="LoginForm.css">
+    <title>Login Form</title>
+</head>
+<body>
+    <form action="post">
+            <h1>Login Form</h1>
+            <div class="formcontainer">
+                <hr>
+                <div class="container">
+                    <label for="uname"><strong>User Name</strong></label>
+                    <input type="text" name="uname" placeholder="User Name" required><br>
+                    
+                    <label for="psw"><strong>Password</strong></label>
+                    <input type="password" placeholder="Enter Password" name="psw" required>
+                </div><br>
+                <button type="submit">Login</button>
+                <div class="container">
+                    <label>
+                        <input type="checkbox" checked="checked" name="remember">Remember me
+                    </label><br>
+                    <span class="psw"><a href="#">Forgot password?</a></span>
+                </div>
+            </div>
+    </form>
+</body>
+</html>
