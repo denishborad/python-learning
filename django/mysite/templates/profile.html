@@ -1,0 +1,133 @@
+{% extends "base.html" %} {% block content %} {% if user.is_authenticated %}
+<div class="row">
+  <div class="col-md-6">
+    <form method="post" enctype="multipart/form-data">
+      <div class="container mx-5">
+        <h1>
+          Welcome {{request.user.username}}<br />
+          <img
+            src="{{request.user.userdetails.profile_pic.url}}"
+            class="rounded-circle"
+            alt=""
+          />
+        </h1>
+      </div>
+      <div class="container mx-lg-5">
+        <!-- <h5>{{request.user.userdetails.email}}</h5>
+          <h5>{{request.user.userdetails.mobile_no}}</h5>
+          <h5>{{request.user.userdetails.dob}}</h5> -->
+        {% csrf_token %}
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">{{u_form.as_p}} {{p_form.as_p}}</div>
+          </div>
+          <button type="submit" class="btn btn-outline-info my-lg-4 ml-lg-4">
+            Update Profile
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% else %}
+
+<p>Login to view your profile</p>
+
+{% endif %} {% endblock %}
+<!-- {% if user.is_authenticated %}
+<div class="row">
+  <div class="col-md-3">
+    <div class="card card-body m-3">
+      <a href="{% url 'index' %}" class="btn btn-warning">
+        &#8592; Back To Home
+      </a>
+      <hr />
+      <h4>Your profile-pic</h4>
+      <img src="{{ user.profile.profile_pic.url }}" alt="images" name="img" />
+      <input class="p-3" type="file" id="img" accept="image/*" />
+    </div>
+  </div>
+  <div class="col-md-9">
+    <div class="card card-body m-3">
+      <form
+        action="{% url 'profile' %}"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        {% csrf_token %}
+        <h2 class="text-center">User Profile</h2>
+        <!-- 
+        <div class="form-group">
+          <label for="img" style="color: black">Select image:</label>
+          <input type="file" id="img" name="img" accept="image/*" />
+        </div> -->
+<!-- <div>
+          <img src="{{ user.profile.profile_pic.url }}" />
+        </div>
+        <div class="form-group">
+          <label class="icon-lp">User Name</label>
+          <input
+            type="text"
+            name="username"
+            id="username"
+            tabindex="1"
+            class="form-control"
+            placeholder="Username"
+            value="{{ user.username }}"
+            required=""
+          />
+        </div>
+        <div class="form-group">
+          <label class="icon-lp">Your Email</label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            tabindex="1"
+            class="form-control"
+            placeholder="Email Address"
+            value="{{ user.email }}"
+            required=""
+          />
+        </div>
+        <div class="form-group">
+          <label class="icon-lp">Your Date Of Birth</label>
+          <input
+            type="date"
+            name="dob"
+            id="dob"
+            tabindex="1"
+            class="form-control"
+            placeholder="Date Of Birth"
+            value="{{ user.profile.dob }}"
+            required=""
+          />
+        </div>
+        <div class="form-group">
+          <label class="icon-lp">Your Mobile Number</label>
+          <input
+            type="text"
+            name="mobile_no"
+            id="mobile_no"
+            tabindex="1"
+            class="form-control"
+            placeholder="Mobile Number"
+            value="{{ user.profile.mobile_no }}"
+            required=""
+          />
+        </div>
+
+        <input type="submit" class="btn btn-outline-primary" name="Update" />
+      </form>
+    </div>
+  </div>
+</div>
+<!-- <p class="text-center">Username: {{ users }}</p>
+<p class="text-center">Email: {{ users.email }}</p>
+
+{% else %}
+
+<p>Login to view your profile</p>
+
+{% endif %} -->

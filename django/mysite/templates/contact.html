@@ -14,8 +14,12 @@
       </div>
       <div class="col-md-6">
         <div class="contact_main">
-          <div class="contact_bt"><a href="#">Contact Form</a></div>
-          <div class="newletter_bt"><a href="#">Newletter</a></div>
+          <div class="contact_bt">
+            <a href="{% url 'contactus' %}" name="contactus">Contact Form</a>
+          </div>
+          <div class="newletter_bt">
+            <a href="{% url 'contactus' %}" name="newletter">Newletter</a>
+          </div>
         </div>
       </div>
     </div>

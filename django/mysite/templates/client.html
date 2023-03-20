@@ -14,16 +14,17 @@
             <div class="client_main">
               <div class="client_left">
                 <div class="client_img">
-                  <img src="/static/images/client-img.png" />
+                  <img src="{{request.user.userdetails.profile_pic.url}}" />
                 </div>
               </div>
               <div class="client_right">
-                <h3 class="name_text">Jonyro</h3>
+                <h3 class="name_text">{{ user }}</h3>
                 <p class="dolor_text">
                   consectetur adipiscing elit, sed do eiusmod tempor incididunt
                   ut labore et dolore magna aliqua. Ut enim ad minim veniam,
                   quis nostrud exercitation eu
                 </p>
+                {{ user.profile.mobile_no }}
               </div>
             </div>
           </div>

@@ -1,3 +1,6 @@
+{% load static %}
+{% static "images" as baseUrl %}
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -40,19 +43,38 @@
                <a href="{% url 'contact' %}" name="contact">Contact</a>
             </div>
             <span class="toggle_icon" onclick="openNav()"><img src="/static/images/toggle-icon.png"></span>
-            <a class="logo" href="index.html"><img src="/static/images/logo.png"></a></a>
+            <a class="logo" href="{% url 'index' %}"><img src="/static/images/logo.png"></a></a>
             <form class="form-inline ">
                <div class="login_text">
                   <ul>
-                     <li><a href="{% url 'login' %}" name="login"><img src="/static/images/user-icon.png"></a></li>
+                     {% if user.is_authenticated %}
+                     <li><button type="button" class="btn btn-outline-warning"><a href="{% url 'logout' %}" style="color: black">LogOut</a></button></li>
+                     <li><button type="button" class="btn btn-outline-info"><a href="{% url 'change' %}" style="color: black">Change Password</a></button></li>
+                     <li><a href="{% url 'profile' %}" name="profile" class="aria-hidden"><img src="/static/images/user-icon.png"></a></li>
+                     {% else %}
+                     <li><button type="button" class="btn btn-outline-primary"><a href="{% url 'register' %}" style="color: black">Register</a></button></li>
+                     <li><button type="button" class="btn btn-outline-success"><a href="{% url 'login' %}" style="color: black">Login</a></button></li>
+                     {% endif %}
                      <li><a href="#"><img src="/static/images/bag-icon.png"></a></li>
-                     <li><a href="#"><img src="/static/images/search-icon.png"></a></li>
+                     <li style="color: black;"><a href="#"><img src="/static/images/search-icon.png"></a>
+                     <b>{{ asd }}</b></li>
+                     <!-- <li><a href="{% url 'logout' %}" style="color: black">Logout</a></li> -->
                   </ul>
                </div>
             </form>
          </nav>
       </div>
-   </div>
+      {% for message in messages %}
+      <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+         </button>
+         <strong>
+            {{ message }}
+         </strong>
+      </div>
+      {% endfor %}
+   </div>   
    <!-- header section end -->
 
    {% block content %}
@@ -62,7 +84,7 @@
     <!-- footer section start -->
     <div class="footer_section layout_padding">
       <div class="container">
-         <div class="footer_logo"><a href="index.html"><img src="/static/images/footer-logo.png"></a></div>
+         <div class="footer_logo"><a href="{% url 'index' %}"><img src="/static/images/footer-logo.png"></a></div>
          <div class="contact_section_2">
             <div class="row">
                <div class="col-sm-4">
@@ -88,7 +110,7 @@
                   </div>
                </div>
                <div class="col-sm-4">
-                  <div class="footer_logo_1"><a href="index.html"><img src="/static/images/footer-logo.png"></a></div>
+                  <div class="footer_logo_1"><a href="{% url 'index' %}"><img src="/static/images/footer-logo.png"></a></div>
                   <p class="dummy_text">commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non</p>
                </div>
                <div class="col-sm-4">
@@ -130,7 +152,7 @@
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/popper.min.js"></script>
     <script src="/static/js/bootstrap.bundle.min.js"></script>
-    <script src="/static/js/jquery-3.0.0.min.js"></script>
+    <script src="/static/js/jquery-3.2.1.slim.min.js"></script>
     <script src="/static/js/plugin.js"></script>
     <!-- sidebar -->
     <script src="/static/js/jquery.mCustomScrollbar.concat.min.js"></script>
