@@ -40,27 +40,17 @@ class Login(models.Model):
 
 
 class Register(models.Model):
-    uname = models.CharField(max_length=100)
+    user_id = models.AutoField(primary_key=True)
+    uname = models.CharField(max_length=100, null=True)
     profile_image = models.ImageField(
         upload_to='images/', blank=True, null=True)
     email = models.EmailField()
     password = models.CharField(max_length=12)
     repassword = models.CharField(max_length=12)
+    update = models.CharField(max_length=250, null=True)
 
     def __str__(self):
         return self.uname
-
-
-# class Profile(models.Model):
-#     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
-#     uname = models.CharField(max_length=150, null=True)
-#     email = models.EmailField(null=True)
-#     profile_pic = models.ImageField(upload_to='images/', blank=True, null=True)
-#     dob = models.DateField(blank=True, null=True)
-#     mobile_no = models.IntegerField(blank=True, null=True)
-
-#     def __str__(self):
-#         return str(self.user)
 
 
 class UserDetails(models.Model):

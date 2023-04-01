@@ -1,11 +1,8 @@
 
 from datetime import datetime, timedelta
 import secrets
-import token
 from django.core.mail import EmailMessage
-from django.core.mail import send_mail
 from django.shortcuts import redirect, render
-from django.urls import reverse
 from .models import Register, contactus, Product, LinkGenerate
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -13,13 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import UserUpdate, ProfileUpdate
 from django.template.loader import render_to_string
-from django.contrib.auth.forms import PasswordResetForm
-from django.db.models.query_utils import Q
-from django.utils.encoding import force_bytes
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode
-from django.http import HttpResponse, JsonResponse
-from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth.hashers import make_password
 
 
 # Create your views here.
@@ -78,6 +69,7 @@ def register(request):
         my_user = Register(uname=username,
                            email=Email, password=password1, profile_image=img)
         my_user.save()
+
         myuser = User.objects.create_user(username, Email, password1)
         myuser.save()
 
@@ -153,9 +145,9 @@ def profile(request):
 
 def change_password(request):
     context = {}
-    ch = Register.objects.filter(id=request.user.id)
+    ch = Register.objects.filter(user_id=request.user.id)
     if len(ch) > 0:
-        data = Register.objects.get(user__id=request.user.id)
+        data = Register.objects.get(user_id=request.user.id)
         context["data"] = data
 
     if request.method == "POST":
@@ -202,112 +194,28 @@ def change_password(request):
 
 # True Code
 
-
-# error Code
-
-# def password_reset_request(request):
-#     if request.method == 'POST':
-#         password_form = PasswordResetForm(request.POST)
-#         if password_form.is_valid():
-#             data = password_form.cleaned_data['email']
-#             user_email = User.objects.filter(Q(email=data))
-#             if user_email.exists():
-#                 for user in user_email:
-#                     subject = 'Password Request'
-#                     email_template_name = 'password_reset_email.html'
-#                     parameters = {
-#                         'email': user.email,
-#                         'domain': '127.0.0.1:8000',
-#                         'site_name': 'BeautiFile',
-#                         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-#                         'token': default_token_generator.make_token(user),
-#                         'protocol': 'http',
-#                     }
-#                     email = render_to_string(email_template_name, parameters)
-
-#                     try:
-#                         send_mail(subject, email, '', [
-#                             user.email], fail_silently=False)
-
-#                     except:
-#                         return HttpResponse("Invalid Header")
-#                     return redirect('password_reset_done')
-#     else:
-#         password_form = PasswordResetForm()
-#     context = {
-#         'password_form': password_form
-#     }
-#     return render(request, "password_reset_form.html", context)
-
-# error Code
-
-
-# error Code
-
-# def LinkGenerate(request, uidb64, token):
-#     if request.method == 'POST':
-#         email = request.POST['email']
-
-#         if not email(email):
-#             messages.error(request, 'Email Has Been Not Found!')
-#             return render(request, "password_reset_form.html")
-
-#         current_site = get_current_site(request)
-#         email_body = {
-#             'user': user,
-#             'domain': current_site.domain,
-#             'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-#             'token': account_activation_token.make_token(user),
-#         }
-#         link = reverse('activate', kwargs={
-#             'uidb64': email_body['uid'], 'token': email_body['token']})
-
-#         email_subject = 'Activate your account'
-
-#         activate_url = 'http://'+current_site.domain+link
-
-#         email = EmailMessage(
-#             email_subject,
-#             'Hi '+user.username + ', Please the link below to activate your account \n'+activate_url,
-#             'noreply@semycolon.com',
-#             [email],
-#         )
-
-#         email.send(fail_silently=False)
-#         return render(request, "password_reset_form.html")
-
-# error Code
-
-
 def reset_password(request):
     if request.method == 'POST':
         user_email = request.POST['email']
         print(user_email)
         associated_user = User.objects.exclude(
             is_active=0).filter(email=user_email)
-        print("email_id")
 
         token = secrets.token_hex()
 
         if associated_user.exists():
-            id = associated_user.values('id').first()['id']
-            user = User.objects.exclude(is_active=0).get(id=id)
+            id = associated_user.values('pk').first()['pk']
+            user = User.objects.exclude(is_active=0).get(pk=id)
 
             Subject = "Request For Password Reset!"
             text_template = "password_reset_email.txt"
             data = {
-                # "email": user_email,
-                # "domain": '127.0.0.1:8000',
-                # "site_name": 'Website',
-                # "user": associated_user,
-                # "token": token,
-                # "protocol": 'http',
-                'email': user_email,
-                'domain': '127.0.0.1:8000',
-                'site_name': 'BeautiFile',
-                'uid': associated_user,
-                'token': token,
-                'protocol': 'http',
+                "email": user_email,
+                "domain": '127.0.0.1:8000',
+                "site_name": 'Website',
+                "user": associated_user,
+                "token": token,
+                "protocol": 'http',
             }
 
             myemail = render_to_string(text_template, data)
@@ -330,58 +238,68 @@ def reset_password(request):
 
 
 def change_forgot_pass(request, token):
-    # utoken = token
 
-    # # This is temp timestamp to verify diff of 5 min.
-    # temp_timestamp = datetime.now()
-    # # temp timestamp converted to unix
-    # temp_time = datetime.timestamp(temp_timestamp)*1000
-    # convert_temp_timestamp = float(temp_time)  # current time
-    # pass_reset_data = LinkGenerate.objects.filter(
-    #     token=utoken).values()  # unique token verifies user
+    # utoken = request.GET.get('token')
+    utoken = token
+    print(utoken)
 
-    # if pass_reset_data.exists():  # True if user found
+    # uid = User.objects.get(id=user_id)
+    # text = LinkGenerate.objects.filter(user_id=data)
+    # print("asfsdgsagsarhrhstz", uid)
 
-    #     email = LinkGenerate.objects.filter(token=utoken).values(
-    #         'email').first()['email']  # This is for getting single email id
+    # This is temp timestamp to verify diff of 5 min.
+    temp_timestamp = datetime.now()
+    # temp timestamp converted to unix
+    temp_time = datetime.timestamp(temp_timestamp)*1000
+    convert_temp_timestamp = float(temp_time)  # current time
+    pass_reset_data = LinkGenerate.objects.filter(
+        token=utoken).values()  # unique token verifies user
 
-    #     myuser_id = User.objects.filter(
-    #         user_email=email).values_list('user_id')[0][0]
+    if pass_reset_data.exists():  # True if user found
+        email = LinkGenerate.objects.filter(token=utoken).values('email').first()[
+            'email']  # This is for getting single email id
+        users = User.objects.filter(email=email).values('id').first()['id']
 
-    #     user = User.objects.get(user_id=myuser_id)
+        myuser_id = Register.objects.filter(
+            email=email).values_list('user_id')[0][0]
+        print("myuser_id", myuser_id)
 
-    #     # status value for checking link been used or not
-    #     status_code = pass_reset_data.values_list('status')[0][0]
+        # text = Register.objects.filter(user_id=myuser_id)
+        # print(text)
+        # user = User.objects.get(id=users)
+        # print(user)
 
-    #     exp_time = pass_reset_data.values_list(
-    #         'timestamp')[0][0]  # get timestamp from database
+        # status value for checking link been used or not
+        status_code = pass_reset_data.values_list('status')[0][0]
 
-    #     convert_unix_timestamp = float(exp_time)
-    #     if (convert_unix_timestamp > convert_temp_timestamp) and (status_code == 1):
-    #         if request.method == "POST":
-    #             pass1 = request.POST['new_pass']
-    #             pass2 = request.POST['confirm_pass']
+        exp_time = pass_reset_data.values_list(
+            'expiry')[0][0]  # get timestamp from database
+        print("sasfsgasd", status_code, exp_time)
+        convert_unix_timestamp = float(exp_time)
+        if (convert_unix_timestamp > convert_temp_timestamp) and (status_code == 1):
+            if request.method == "POST":
+                pass1 = request.POST['new_pass']
+                pass2 = request.POST['confirm_pass']
 
-    #             if pass1 == pass2:
-    #                 enc_pass = make_password(pass1)
-    #                 update_pass = {
-    #                     'user_password': enc_pass
-    #                 }
-    #                 user.update(**update_pass)
+                if pass1 == pass2:
+                    enc_pass = make_password(pass1)
+                    update_pass = {
+                        'password': enc_pass
+                    }
+                    print("asdsfasf", update_pass)
 
-    #                 update_status = {
-    #                     'status':   0
-    #                 }
+                    Register.objects.filter(
+                        user_id=myuser_id).update(**update_pass)
+                    User.objects.filter(id=users).update(**update_pass)
 
-    #                 pass_reset_data.update(**update_status)
+                    # update_status = {
+                    #     'status': 0
+                    # }
 
-    #             else:
-    #                 return redirect('password_reset_confirm')
+                    # pass_reset_data.update(**update_status)
+        else:
+            return redirect('password_reset')
     return render(request, 'password_reset_confirm.html')
-
-
-def reset_password_done(request):
-    return render(request, 'password_reset_done.html')
 
 
 def reset_password_complete(request):

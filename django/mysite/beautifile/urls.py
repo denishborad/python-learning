@@ -25,11 +25,11 @@ urlpatterns = [
     #          name='password_reset_confirm'),
     #     path("reset_password_complete/", auth_views.PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'),
     #          name='password_reset_complete'),
-    path("password_reset/", views.reset_password, name='password_reset'),
-    path("password_reset/", views.reset_password_done, name='password_reset'),
-    path("password_reset_confirm/<uidb64>/<token>/", views.change_forgot_pass,
+    path("password-reset/", views.reset_password, name='password_reset'),
+    path("password-reset-confirm/<slug:token>/", views.change_forgot_pass,
          name='password_reset_confirm'),
-    path("password_reset/", views.reset_password_complete, name='password_reset'),
+    path("password-reset-complete/",
+         views.reset_password_complete, name='password_reset_complete'),
 
 
 ]
