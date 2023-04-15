@@ -1,0 +1,101 @@
+{% extends "base.html" %} {% block content %}
+<h1 style="text-align: center; padding-top: 1em; padding-bottom: 1em">
+    Customer Lists 
+  </h1>
+  <div class="container">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Sr No.</th>
+
+          <th scope="col">UserName</th>
+
+          <th scope="col">First Name</th>
+
+          <th scope="col">Last Name</th>
+
+          <th scope="col">Email</th>
+
+          <th scope="col">Prof_Img</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for cust in customers %}
+
+        <tr>
+          <th scope="row">{{ cust.userid }}</th>
+
+          <td>{{ cust.username }}</td>
+
+          <td>{{ cust.firstname }}</td>
+
+          <td>{{ cust.lastname }}</td>
+
+          <td>{{ cust.email }}</td>
+
+          <td>{{ cust.prof_img }}</td>
+
+          <td>
+            <a style="margin-right: 30px" href="{% url 'edit' cust.pk %}"
+              ><button type="button" class="btn btn-outline-secondary">
+                Edit
+              </button></a
+            >
+
+            <a href="{% url 'delete' cust.pk %}"
+              ><button type="button" class="btn btn-outline-danger">
+                Remove
+              </button></a
+            >
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 offset-md-4">
+      <nav aria-label="...">
+        <ul class="pagination">
+          {% if customers.has_previous %}
+          <li class="page-item"><a class="page-link" href="/lists/?page={{customers.previous_page_number}}">Previous</a></li>
+          <li class="page-item">
+            <a class="page-link" href="/lists/?page=1" tabindex="-1">First</a>
+          </li>
+          {% endif %}
+
+          <!-- {% for n in pagelist %}
+          <li class="page-item"><a class="page-link" href="/lists/?page={{n}}" >{{n}}</a></li>
+          {% endfor %} -->
+
+          {% for n in customers.paginator.page_range %}
+          {% if customers.number == n %}
+          <li class="page-item active"><a class="page-link" href="/lists/?page={{n}}" >{{n}}</a></li>
+          {% else %}
+          <li class="page-item"><a class="page-link" href="/lists/?page={{n}}" >{{n}}</a></li>
+          {% endif %}
+          {% endfor %}
+
+          {% if customers.has_next %}
+          <li class="page-item"><a class="page-link" href="/lists/?page={{customers.next_page_number}}">Next</a></li>
+          <li class="page-item"><a class="page-link" href="/lists/?page={{lastpage}}">Last</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- <div class="offset-5">
+    <a href="#"
+      ><button type="button" class="btn btn-primary">Add New Info</button></a
+    >
+  </div> -->
+
+
+
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "base.html" %} {% block content %}
+<div class="main-form-box bg-primary-subtle">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3 col-lg-6 col-sm-6 col-xl-6">
+                <div class="panel panel-sign-up my-md-2">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="text-center text-secondary-emphasis">
+                                <h3>Your Profile Page</h3>
+                            </div>
+                            <h4 class="text-center"><b></b></h4>
+                            <form action="profileupdate/{{ customers.userid }}" method="post" enctype="multipart/form-data">
+                                <br />
+                                {% csrf_token %}
+                                <div class="rounded-circle">
+                                    <div class="text-center">
+                                        <h1>
+                                            <img src="{{ customers.prof_img.url }}" height="150" width="150"
+                                                class="rounded-circle mx-auto d-block" alt="...">
+                                        </h1>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="username" class="form-check-inline"><b>UserName</b></label>
+                                        <input type="text" class="form-control" id="inputName" name="username"
+                                            placeholder="UserName" required value="{{ customers.username }}">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="username" class="form-check-inline"><b>FirstName</b></label>
+                                        <input type="text" class="form-control" id="inputfirstname" name="firstname"
+                                            placeholder="FirstName" required value="{{ customers.firstname }}">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="username" class="form-check-inline"><b>LastName</b></label>
+                                        <input type="text" class="form-control" id="inputlastname" name="lastname"
+                                            placeholder="LastName" required value="{{ customers.lastname }}">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="email" class="form-check-inline"><b>Email</b></label>
+                                        <input type="email" class="form-control" id="inputemail" name="email"
+                                            placeholder="Email" required value="{{ customers.email }}">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="dob" class="form-check-inline"><b>Date Of Birth</b></label>
+                                        <input type="datetime" value="" class="form-control" id="inputdob" name="dob"
+                                            placeholder="Date Of Birth" />
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="inputAddress"><b>Address</b></label>
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                                            name="address" placeholder="Enter Your Address"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="phone" class="form-check-inline"><b>Phone No.</b></label>
+                                        <input type="tel" value="" class="form-control" id="inputphone" name="phone"
+                                            placeholder="Phone Number" />
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="img" style="color: black" class="form-check-inline"><b>Select
+                                                Your Profile image:</b></label>
+                                        <input type="file" id="inputimg" name="img" accept="image/*" class="form-control" />
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-outline-secondary text-secondary-emphasis my-3 offset-4">
+                                    Update Profile
+                        </button>
+                                </form>
+                        </div>
+                        <!-- <a href="{% url 'profileupdate' customers.userid %}"><button type="submit"
+                                class="btn btn-outline-secondary mt-3 text-secondary-emphasis my-3 offset-5">Edit</button></a> -->
+                            
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

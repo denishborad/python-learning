@@ -1,0 +1,10 @@
+{% autoescape off %}
+
+Hello, {{user}}, Someone asked for password reset
+for email {{ email }}. Follow the link below: 
+{{ protocol }}://{{ domain }}{% url 'password_reset_confirm' token=token %} 
+Your username, in case
+you've forgotten: 
+{{ user }} 
+
+{% endautoescape %}

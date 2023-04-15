@@ -1,0 +1,48 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container">
+    <h3 class="text-justify my-3">Update Your Details</h3>
+    <form method="post" action="updaterecord/{{ customers.userid }}">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputName"><b>UserName</b></label>
+                <input type="text" class="form-control" id="inputName" name="username" placeholder="UserName"
+                    required value="{{ customers.username}}">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputfirstname"><b>FirstName</b></label>
+                <input type="text" class="form-control" id="inputfirstname" name="firstname" placeholder="FirstName" required
+                    value="{{ customers.firstname}}">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputlastname"><b>LastName</b></label>
+                <input type="text" class="form-control" id="inputlastname" name="lastname" placeholder="LastName" required
+                    value="{{ customers.lastname}}">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputemail"><b>Email</b></label>
+                <input type="email" class="form-control" id="inputemail" name="email" placeholder="Email" required
+                    value="{{ customers.email}}">
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group col-md-6">
+                <label for="img" style="color: black" class="form-check-inline"><b>Select
+                        Your Profile image:</b></label>
+                <input type="file" id="img" name="img" accept="media/image/*" class="form-control" />
+            </div>
+        </div>
+        <!-- <button type="submit" class="btn btn-outline-success">Update</button> -->
+        <a href="#"><button type="submit" class="btn btn-outline-secondary mt-3">Update</button></a>
+        <a href="{% url 'lists' %}"><button type="button" class="btn btn-outline-dark mx-2 mt-3">List View</button></a>
+    </form>
+</div>
+
+{% endblock %}
