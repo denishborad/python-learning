@@ -17,7 +17,7 @@
                                     <div class="text-center">
                                         <h1>
                                             <img src="{{ customers.prof_img.url }}" height="150" width="150"
-                                                class="rounded-circle mx-auto d-block" alt="...">
+                                                class="rounded mx-auto d-block" alt="Image">
                                         </h1>
                                     </div>
                                 </div>
@@ -52,7 +52,7 @@
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="dob" class="form-check-inline"><b>Date Of Birth</b></label>
-                                        <input type="datetime" value="" class="form-control" id="inputdob" name="dob"
+                                        <input type="date" value="{{ customers.dob | date:'Y-m-d' }}" class="form-control" id="inputdob" name="dob"
                                             placeholder="Date Of Birth" />
                                     </div>
                                 </div>
@@ -60,31 +60,33 @@
                                     <div class="form-group">
                                         <label for="inputAddress"><b>Address</b></label>
                                         <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-                                            name="address" placeholder="Enter Your Address"></textarea>
+                                            name="address" placeholder="Enter Your Address">{{ customers.address}}</textarea>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="phone" class="form-check-inline"><b>Phone No.</b></label>
-                                        <input type="tel" value="" class="form-control" id="inputphone" name="phone"
+                                        <input type="tel" value="{{ customers.mobile_no }}" class="form-control" id="inputphone" name="phone"
                                             placeholder="Phone Number" />
                                     </div>
                                 </div>
-                                <div class="col">
+                                <!-- <div class="col">
                                     <div class="form-group">
                                         <label for="img" style="color: black" class="form-check-inline"><b>Select
                                                 Your Profile image:</b></label>
-                                        <input type="file" id="inputimg" name="img" accept="image/*" class="form-control" />
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-outline-secondary text-secondary-emphasis my-3 offset-4">
+                                        <input type="file" id="img" name="img" accept="image/*"
+                                            class="form-control" value="{{ customers.prof_img }}"/>
+                                    </div>{{ customers.prof_img }}
+                                </div> -->
+                                <button type="submit"
+                                    class="btn btn-outline-secondary text-secondary-emphasis my-3 offset-4">
                                     Update Profile
-                        </button>
-                                </form>
+                                </button>
+                            </form>
                         </div>
-                        <!-- <a href="{% url 'profileupdate' customers.userid %}"><button type="submit"
+                        <!-- <a href=""><button type="submit"
                                 class="btn btn-outline-secondary mt-3 text-secondary-emphasis my-3 offset-5">Edit</button></a> -->
-                            
+
                     </div>
                 </div>
             </div>

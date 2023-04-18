@@ -14,6 +14,7 @@ urlpatterns = [
     path('edit/<int:userid>', views.Edits, name='edit'),
     path('edit/updaterecord/<int:userid>', views.UpdateRecord, name='updaterecord'),
     path('delete/<int:userid>',views.Delete,name='delete'),
+    path('changepass/<userid>',views.ChangePass,name='changepass'),
     path('product/', views.Product, name='product'),
     path('pass-reset/', views.PassReset, name='pass_reset'),
     path('pass-reset-done/', views.PassResetDone, name='pass_reset_done'),

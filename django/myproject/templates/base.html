@@ -224,13 +224,13 @@
               </a>
             </li>
             <li>
-              <a href="{% url 'profile' customers.userid %}" class="nav-link text-white">
+              <a href="profile/{{customer}}" class="nav-link text-white">
                 <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="#people-circle"/></svg>
                 Customer
               </a>
             </li>
             <li><button type="button" class="btn btn-outline-warning my-md-2"><a href="{% url 'logout' %}" style="color: white">LogOut</a></button></li>
-            <li><button type="button" class="btn btn-outline-info my-md-2 mx-md-2"><a href="#" style="color: white">Change Password</a></button></li>
+            <li><button type="button" class="btn btn-outline-info my-md-2 mx-md-2"><a href="" style="color: white">Change Password</a></button></li>
           </ul>
           {% else %}
           <div class="text-end">
