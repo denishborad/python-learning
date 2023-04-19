@@ -138,3 +138,8 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.file'
+SESSION_FILE_PATH = os.path.join(BASE_DIR,'session')
+
+SESSION_COOHIE_AGE = 300000000000

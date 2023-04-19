@@ -1,19 +1,24 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
+
+from myproject.settings import SESSION_COOHIE_AGE
 from .models import contactus, Users
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 
+
 # Create your views here.
+def Index(request):
+    return render(request, 'index.html')
 
 def Home(request):
-    use = request.session['username']
-    print(use,'Hello1')
-    # username = request.session['username']
-    # print(username)
-    customer = Users.objects.filter(username=use).values('userid').first()['userid']
-    print(customer)
+    # use = request.session['username']
+    # print(use,'Hello1')
+    username = request.session['username']
+    print(username,'Hello1')
+    customer = Users.objects.filter(username=username).values('userid').first()['userid']
+    print(customer,SESSION_COOHIE_AGE)
     
     return render(request,'home.html', {"customer":customer})
 
@@ -63,10 +68,10 @@ def Logout(request):
     try:
         del request.session['userid']
         messages.info(request, "Your Session ID has been deleted!")
-        return redirect('home')
+        return redirect('login')
     except KeyError:
         messages.success(request, "Logged out successfully!")
-    return redirect('home')
+    return redirect('index')
 
 def Profile(request,userid):
     customers = Users.objects.get(userid=userid)
@@ -164,32 +169,42 @@ def Delete(request, userid):
     return redirect('lists')
 
 def ChangePass(request):
-    # user = Users.objects.get(userid=userid)
-    # print(user)
-    # context = {}
-    # ch = Users.objects.filter(userid=request.user.id)
-    # if len(ch) > 0:
-    #     data = Register.objects.get(user_id=request.user.id)
-    #     context["data"] = data
+    context = {}
+    ch = Users.objects.filter(userid=request.user.id)
+    print('ch', ch)
+    if len(ch) > 0:
+        data = Users.objects.get(userid=request.user.id)
+        context["data"] = data
+        print('data',data)
+        print('context', context)
 
-    # if request.method == "POST":
-    #     current = request.POST["cpwd"]
-    #     new_pas = request.POST["npwd"]
+    if request.method == "POST":
+        current = request.POST["cpwd"]
+        new_pas = request.POST["npwd"]
+        print(current,new_pas)
+        
+        # user = Users.objects.get(userid=userid)
+        # print(user)
+        # user1 = User.objects.filter(username=data.username).values('id').first()['id']
+        user = User.objects.get(id=request.user.id)
+        un = user.username
+        print('user',user)
+        # print('user1',user1)
+        print('un', un)
+        check = user.check_password(current)
+        print('check', check)
 
-    #     user = User.objects.get(id=request.user.id)
-    #     un = user.username
-    #     check = user.check_password(current)
 
-    #     if check == True:
-    #         user.set_password(new_pas)
-    #         user.save()
-    #         context["msz"] = "Password Changed"
-    #         context["col"] = "alert-success"
-    #         user = User.objects.get(username=un)
-    #         login(request, user)
-    #     else:
-    #         context["msz"] = "Incorrect current password"
-    #         context["col"] = "alert-danger"
+        if check == True:
+            user.set_password(new_pas)
+            user.save()
+            context["msz"] = "Password Changed"
+            context["col"] = "alert-success"
+            user = User.objects.filter(username=un)
+            login(request, user)
+        else:
+            context["msz"] = "Incorrect current password"
+            context["col"] = "alert-danger"
 
     return render(request, 'changepass.html')
 

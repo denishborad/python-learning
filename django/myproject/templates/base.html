@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.111.3">
-    {% block title %}{% endblock %}
+    <title>{% block title %}{% endblock %}</title>
 
     <!-- <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/headers/"> -->
 
@@ -196,6 +196,7 @@
               <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
             </form>
             
+          {% if user.is_authenticated %}
           <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
             <li>
               <a href="{% url 'home' %}" class="nav-link text-white">
@@ -203,7 +204,6 @@
                 Home
               </a>
             </li>
-            {% if user.is_authenticated %}
             <li>
               <a href="{% url 'lists' %}" class="nav-link text-white">
                 <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="#speedometer2"/></svg>
@@ -228,9 +228,9 @@
                 <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="#people-circle"/></svg>
                 Customer
               </a>
-            </li>
+            </li>{{asd}}
             <li><button type="button" class="btn btn-outline-warning my-md-2"><a href="{% url 'logout' %}" style="color: white">LogOut</a></button></li>
-            <li><button type="button" class="btn btn-outline-info my-md-2 mx-md-2"><a href="" style="color: white">Change Password</a></button></li>
+            <li><button type="button" class="btn btn-outline-info my-md-2 mx-md-2"><a href="{% url 'changepass' %}" style="color: white">Change Password</a></button></li>
           </ul>
           {% else %}
           <div class="text-end">

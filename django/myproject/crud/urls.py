@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('index/',views.Index, name='index'),
     path('', views.Home, name='home'),
     path('signup/', views.Signup, name='signup'),
     path('login/', views.Login, name='login'),
@@ -14,7 +15,7 @@ urlpatterns = [
     path('edit/<int:userid>', views.Edits, name='edit'),
     path('edit/updaterecord/<int:userid>', views.UpdateRecord, name='updaterecord'),
     path('delete/<int:userid>',views.Delete,name='delete'),
-    path('changepass/<userid>',views.ChangePass,name='changepass'),
+    path('changepass/',views.ChangePass,name='changepass'),
     path('product/', views.Product, name='product'),
     path('pass-reset/', views.PassReset, name='pass_reset'),
     path('pass-reset-done/', views.PassResetDone, name='pass_reset_done'),
