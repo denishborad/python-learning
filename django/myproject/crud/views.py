@@ -3,9 +3,14 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 
 from myproject.settings import SESSION_COOHIE_AGE
-from .models import contactus, Users
+from .models import contactus, Users, LinkGenerate
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
+from datetime import datetime, timedelta
+import secrets
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.contrib.auth.hashers import make_password
 
 
 # Create your views here.
@@ -13,14 +18,14 @@ def Index(request):
     return render(request, 'index.html')
 
 def Home(request):
-    # use = request.session['username']
-    # print(use,'Hello1')
-    username = request.session['username']
-    print(username,'Hello1')
-    customer = Users.objects.filter(username=username).values('userid').first()['userid']
-    print(customer,SESSION_COOHIE_AGE)
-    
-    return render(request,'home.html', {"customer":customer})
+    if 'username' in request.session:
+        username = request.session['username']
+        print(username,'Hello1')
+        customer = Users.objects.filter(username=username).values('userid').first()['userid']
+        print(customer,SESSION_COOHIE_AGE)
+        return render(request,'home.html', {"customer":customer})
+    else:
+        messages.success(request, "Welcome To The Index Page")
 
 def Signup(request):
     if request.method == 'POST':
@@ -32,7 +37,7 @@ def Signup(request):
         pass2 = request.POST['password2']
         prof_img = request.FILES['img'] 
         if pass1 != pass2:
-            messages.error(request, 'please!! Your Both Password Are Same??')
+            messages.error(request, 'Please chack!! Your Both Password Are Same??')
             return redirect('signup')
         else:
             sign = User.objects.create_user(username,email,pass1)
@@ -60,7 +65,7 @@ def Login(request):
         else:
             messages.error(
                 request, "Login Required! Please check your username and password")
-            return redirect('home')
+            return redirect('login')
     return render(request, 'login.html')
 
 def Logout(request):
@@ -96,6 +101,7 @@ def profile_update(request,userid):
         user = User.objects.get(id=custom1) # For Get Default Id to CustomId
         user.username = username
         user.save()
+        messages.success(request, 'Your profile Updated!')
         print(custom1)
         print(custom)
 
@@ -108,6 +114,7 @@ def profile_update(request,userid):
         custom.mobile_no = mobile_no
         # custom.prof_img = prof_img
         custom.save()
+        messages.success(request, 'Your profile Updated!')
 
         #For User Id Get and Filter By Email
 
@@ -116,6 +123,9 @@ def profile_update(request,userid):
         # user.username = username
         # user.save()
         # print(custom1)
+        return redirect('home')
+    else:
+        messages.error(request, 'Your Profile not Change!')
         return redirect('home')
     # return render(request,'home.html')
 
@@ -144,20 +154,25 @@ def Edits(request, userid):
 
 
 def UpdateRecord(request, userid):
-    username = request.POST['username']
-    firstname = request.POST['firstname']
-    lastname = request.POST['lastname']
-    email = request.POST['email']
-    prof_img = request.FILES['img']
-    empl = Users.objects.get(userid = userid)
-    empl.username = username
-    empl.firstname = firstname
-    empl.lastname = lastname
-    empl.email = email
-    empl.prof_img = prof_img
-    empl.save()
-    # empl = Users.objects.filter(userid=userid).update(is_delete=0)
-    return redirect('lists')
+    if request.method == 'POST':
+        username = request.POST['username']
+        firstname = request.POST['firstname']
+        lastname = request.POST['lastname']
+        email = request.POST['email']
+        prof_img = request.FILES['img']
+        empl = Users.objects.get(userid = userid)
+        empl.username = username
+        empl.firstname = firstname
+        empl.lastname = lastname
+        empl.email = email
+        empl.prof_img = prof_img
+        empl.save()
+        # empl = Users.objects.filter(userid=userid).update(is_delete=0)
+        messages.success(request, 'Your profile Updated!')
+        return redirect('lists')
+    else:
+        messages.error(request, 'Your Profile not Change!')
+        return redirect('lists')
 
 # def delete(request, emp_id):
 #     Employee.objects.filter(emp_id=emp_id).delete()
@@ -166,14 +181,15 @@ def UpdateRecord(request, userid):
 
 def Delete(request, userid):
     Users.objects.filter(userid=userid).update(is_delete=1)
+    messages.success(request, "User Deleted")
     return redirect('lists')
 
-def ChangePass(request):
+def ChangePass(request,userid):
     context = {}
-    ch = Users.objects.filter(userid=request.user.id)
+    ch = Users.objects.filter(userid=userid).values('userid').first()['userid']
     print('ch', ch)
-    if len(ch) > 0:
-        data = Users.objects.get(userid=request.user.id)
+    if ch > 0:
+        data = Users.objects.get(userid=userid)
         context["data"] = data
         print('data',data)
         print('context', context)
@@ -181,31 +197,45 @@ def ChangePass(request):
     if request.method == "POST":
         current = request.POST["cpwd"]
         new_pas = request.POST["npwd"]
-        print(current,new_pas)
+        new_pas1 = request.POST["npwd1"]
+        print(current,new_pas,new_pas1)
+        if new_pas != new_pas1:
+            messages.error(request, "Your New Password Not Same!")
         
         # user = Users.objects.get(userid=userid)
         # print(user)
-        # user1 = User.objects.filter(username=data.username).values('id').first()['id']
-        user = User.objects.get(id=request.user.id)
-        un = user.username
-        print('user',user)
-        # print('user1',user1)
+        user1 = User.objects.filter(username=data.username).values('id').first()['id']
+        user2 = User.objects.get(id = user1)
+        un = user2.username
+        unn = data.username
+        print('user2',user2)
+        print('user1',user1)
         print('un', un)
-        check = user.check_password(current)
+        print('unn', unn)
+        check = user2.check_password(current)
+        check1 = data.check_password(current)
         print('check', check)
-
-
-        if check == True:
-            user.set_password(new_pas)
-            user.save()
+        print('check1', check1)
+        
+        if check and check1 == True:
+            data.set_password(new_pas)
+            data.save()
+            user2.set_password(new_pas)
+            user2.save()
             context["msz"] = "Password Changed"
             context["col"] = "alert-success"
             user = User.objects.filter(username=un)
+            print(user,'users2')
+            users = Users.objects.filter(username=unn)
+            print(users, 'users')
             login(request, user)
+            login(request, users)
+            return redirect('home')
         else:
             context["msz"] = "Incorrect current password"
             context["col"] = "alert-danger"
-
+            return render(request, 'changepass.html')
+            
     return render(request, 'changepass.html')
 
 
@@ -213,12 +243,111 @@ def Product(request):
     return render(request, 'product.html')
 
 def PassReset(request):
+    if request.method == 'POST':
+        user_email = request.POST['email']
+        print(user_email)
+        associated_user = Users.objects.exclude(
+            is_delete=1).filter(email=user_email)
+
+        token = secrets.token_hex()
+
+        if associated_user.exists():
+            id = associated_user.values('userid').first()['userid']
+            print(id,'id')
+            user = Users.objects.exclude(is_delete=1).get(pk=id)
+            print(user,'user')
+
+            Subject = "Request For Password Reset!"
+            text_template = "pass_reset_email.txt"
+            data = {
+                "email": user_email,
+                "domain": '127.0.0.1:8000',
+                "site_name": 'Website',
+                "user": associated_user,
+                "token": token,
+                "protocol": 'http',
+            }
+
+            myemail = render_to_string(text_template, data)
+
+            email = EmailMessage(Subject, myemail, to=[user_email])
+            email.send()
+
+            time = datetime.now()+timedelta(days=3)
+            expiry = datetime.timestamp(time)*1000
+
+            data1 = LinkGenerate(
+                email=user_email,
+                status=1,
+                token=token,
+                expiry=expiry,
+            )
+
+            data1.save()
+        return redirect('pass_reset_done')
     return render(request, 'pass_reset.html')
 
 def PassResetDone(request):
     return render(request, 'pass_reset_done.html')
 
-def PassResetConfirm(reqeust):
+def PassResetConfirm(reqeust, token):
+    # utoken = request.GET.get('token')
+    utoken = token
+    print(utoken)
+
+    # This is temp timestamp to verify diff of 5 min.
+    temp_timestamp = datetime.now()
+    # temp timestamp converted to unix
+    temp_time = datetime.timestamp(temp_timestamp)*1000
+    convert_temp_timestamp = float(temp_time)  # current time
+    pass_reset_data = LinkGenerate.objects.filter(
+        token=utoken).values()  # unique token verifies user
+
+    if pass_reset_data.exists():  # True if user found
+        email = LinkGenerate.objects.filter(token=utoken).values('email').first()[
+            'email']  # This is for getting single email id
+        users = User.objects.filter(email=email).values('id').first()['id']
+
+        myuserid = Users.objects.filter(
+            email=email).values_list('userid')[0][0]
+        print("myuserid", myuserid)
+
+        # status value for checking link been used or not
+        status_code = pass_reset_data.values_list('status')[0][0]
+
+        exp_time = pass_reset_data.values_list(
+            'expiry')[0][0]  # get timestamp from database
+        print("sasfsgasd", status_code, exp_time)
+        convert_unix_timestamp = float(exp_time)
+        if (convert_unix_timestamp > convert_temp_timestamp) and (status_code == 1):
+            if reqeust.method == "POST":
+                pass1 = reqeust.POST['new_pass']
+                pass2 = reqeust.POST['confirm_pass']
+
+                if pass1 == pass2:
+                    enc_pass = make_password(pass1)
+                    update_password = {
+                        'password': enc_pass,
+                    }
+                    print("asdsfasf", update_password)
+                    User.objects.filter(id=users).update(**update_password)
+                    update_pass = {
+                        'pass1': enc_pass,
+                    }
+
+                    Users.objects.filter(
+                        userid=myuserid).update(**update_pass)
+                    print('Users',update_pass)
+
+                    # update_status = {
+                    #     'status': 0
+                    # }
+
+                    # pass_reset_data.update(**update_status)
+                    return redirect('pass_reset_complete')
+
+        else:
+            return redirect('pass_reset')
     return render(reqeust, 'pass_reset_confirm.html')
 
 def PassResetComplete(request):

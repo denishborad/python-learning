@@ -1,18 +1,27 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 {% block title %}Profile{% endblock %}
 {% block content %}
 <div class="main-form-box bg-primary-subtle">
     <div class="container">
         <div class="row">
-            <div class="col-md-7 mx-auto bg-dark-subtle my-5 p-4">
+            <div class="col-md-7 mx-auto bg-dark-subtle my-md-3 p-4">
                 <div class="panel panel-sign-up my-md-2">
                     <div class="panel-heading">
                         <div class="row">
                             <div class="text-center text-secondary-emphasis">
                                 <h3>Your Profile Page</h3>
+                                {% if messages %}
+                                <ul class="messages">
+                                    {% for message in messages %}
+                                    <li{% if message.tags %} class="{{ message.tags }} text-danger" {% endif %}>
+                                        <b>{{ message}}</b></li>
+                                        {% endfor %}
+                                </ul>
+                                {% endif %}
                             </div>
                             <h4 class="text-center"><b></b></h4>
-                            <form action="profileupdate/{{ customers.userid }}" method="post" enctype="multipart/form-data">
+                            <form action="profileupdate/{{ customers.userid }}" method="post"
+                                enctype="multipart/form-data">
                                 <br />
                                 {% csrf_token %}
                                 <div class="rounded-circle">
@@ -54,22 +63,23 @@
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="dob" class="form-check-inline"><b>Date Of Birth</b></label>
-                                        <input type="date" value="{{ customers.dob | date:'Y-m-d' }}" class="form-control" id="inputdob" name="dob"
-                                            placeholder="Date Of Birth" />
+                                        <input type="date" value="{{ customers.dob | date:'Y-m-d' }}"
+                                            class="form-control" id="inputdob" name="dob" placeholder="Date Of Birth" />
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="inputAddress"><b>Address</b></label>
                                         <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-                                            name="address" placeholder="Enter Your Address">{{ customers.address}}</textarea>
+                                            name="address"
+                                            placeholder="Enter Your Address">{{ customers.address}}</textarea>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="phone" class="form-check-inline"><b>Phone No.</b></label>
-                                        <input type="tel" value="{{ customers.mobile_no }}" class="form-control" id="inputphone" name="phone"
-                                            placeholder="Phone Number" />
+                                        <input type="tel" value="{{ customers.mobile_no }}" class="form-control"
+                                            id="inputphone" name="phone" placeholder="Phone Number" />
                                     </div>
                                 </div>
                                 <!-- <div class="col">

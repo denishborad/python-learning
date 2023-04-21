@@ -26,6 +26,7 @@
               <h1>Reset your password</h1>
               <p>Please enter your new password twice:</p>
               <form action="#" method="post">
+                {% csrf_token %}
                 <div class="row mb-2" style="margin-left: 300px">
                   <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
                   <div class="col-md-5">

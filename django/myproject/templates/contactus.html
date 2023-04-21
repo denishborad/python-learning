@@ -1,4 +1,4 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% block title %}Contact Us{% endblock %}
 {% block content %}
 <style>
@@ -8,6 +8,7 @@
     background: #fff;
     font-family: "Open-sans", sans-serif;
   }
+
   body a {
     transition: 0.5s all;
     -webkit-transition: 0.5s all;
@@ -16,6 +17,7 @@
     -ms-transition: 0.5s all;
     text-decoration: none;
   }
+
   body a:hover {
     text-decoration: none;
   }
@@ -26,6 +28,7 @@
     background: gray;
     padding: 50px 0px;
   }
+
   .contact-heading h3 {
     text-transform: capitalize;
     text-align: center;
@@ -44,18 +47,23 @@
     background: #fff;
     border: none;
   }
+
   textarea {
     height: 100px;
   }
+
   input.form-control:focus {
     box-shadow: none;
   }
+
   button.btn.btn-default:focus {
     outline: none;
   }
+
   ::-webkit-input-placeholder {
     color: #666 !important;
   }
+
   .contact-form input[type="submit"] {
     margin-left: 450px;
     background: #ffb900;
@@ -66,16 +74,19 @@
     font-size: 1.2em;
     font-family: "Ropa Sans", sans-serif;
   }
+
   .contact-form input[type="submit"]:hover {
     background: none;
     color: #ffffff;
   }
+
   iframe {
     padding-top: 30px;
     border: none;
     width: 200%;
     height: 374px;
   }
+
   /* contact */
 </style>
 <section class="contact" id="contact">
@@ -85,34 +96,26 @@
     </div>
     <div class="contact-grids">
       <div class="col-md-6 contact-form">
+        {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }} text-danger" {% endif %}><b>{{ message}}</b></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
         <form action="#" method="post">
           {% csrf_token %}
           <input type="text" placeholder="Subject" required="" name="Subject" />
-          <input
-            type="text"
-            placeholder="Your name"
-            required=""
-            name="Yourname"
-          />
-          <input
-            type="email"
-            placeholder="Your mail"
-            required=""
-            name="Yourmail"
-          />
+          <input type="text" placeholder="Your name" required="" name="Yourname" />
+          <input type="email" placeholder="Your mail" required="" name="Yourmail" />
           <textarea placeholder="Message" required="" name="Message"></textarea>
           <div class="submit1"><input type="submit" value="submit" /></div>
         </form>
       </div>
       <div class="col-md-6 map">
-        <iframe
-          width="600"
-          height="450"
-          frameborder="0"
-          style="border: 0"
+        <iframe width="600" height="450" frameborder="0" style="border: 0"
           src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=Eiffel%20tower+(Map)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
-          allowfullscreen
-        ></iframe>
+          allowfullscreen></iframe>
       </div>
       <div class="clearfix"></div>
     </div>

@@ -1,5 +1,7 @@
 from django.db import models
-from PIL import Image
+from django.contrib.auth.hashers import make_password, check_password
+from django.contrib import messages
+from django.shortcuts import redirect
 
 # Create your models here.
 class Users(models.Model):
@@ -18,7 +20,46 @@ class Users(models.Model):
     created_at = models.DateTimeField(auto_now_add=True,null=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_delete = models.BooleanField(default=0)
+    
+    @classmethod
+    def create(cls, username, firstname, lastname, email, pass1, pass2):
+        u = Users(username=username, firstname=firstname, lastname=lastname, email=email, pass1=pass1,pass2=pass1)
+        if pass1 != pass2:
+            messages.error('please!! Your Both Password Are Same??')
+            return u
+        u.save()
+        return u
+    
+    # @classmethod
+    # def changed_password()
 
+    @classmethod
+    def update_profile(cls,userid, username, firstname, lastname, email, dob, address, mobile_no, prof_img):
+        pro = cls.objects.filter(userid = userid)
+        pro = pro.first()
+        pro.username = username
+        pro.firstname = firstname
+        pro.lastname = lastname
+        pro.email = email
+        pro.dob = dob
+        pro.address = address
+        pro.mobile_no = mobile_no
+        pro.prof_img = prof_img
+        pro.save()
+        return pro
+    
+    @classmethod
+    def set_password(self, pass1):
+        self.pass1 = make_password(pass1)
+        self._pass1 = pass1
+
+    def check_password(self, pass1):
+        def Setter(pass1):
+            self.set_password(pass1)
+            # Password hash upgrades shouldn't be considered password changes.
+            self._pass1 = None
+            self.save(update_fields=["pass1"])
+        return check_password(pass1, self.pass1, Setter)
 
     def __str__(self):
         return self.username
@@ -62,3 +103,12 @@ class contactus(models.Model):
     Yourname = models.CharField(max_length=100)
     Yourmail = models.EmailField()
     Message = models.TextField()
+
+class LinkGenerate(models.Model):
+    email = models.EmailField()
+    token = models.CharField(max_length=300, unique=True)
+    expiry = models.CharField(default="s", max_length=500)
+    status = models.BooleanField()
+
+    def __str__(self):
+        return self.email

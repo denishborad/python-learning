@@ -17,11 +17,11 @@
                 </div>
                 <div class="form-group">
                     <label class="mt-2">New Password</label>
-                    <input type="password" class="form-control" name="npwd" id="pas" onkeyup="check_pass()" required />
+                    <input type="password" class="form-control" name="npwd" id="pas" required />
                 </div>
                 <div class="form-group">
                     <label class="mt-2">Confirm New Password</label>
-                    <input type="password" class="form-control" id="cpas" />
+                    <input type="password" class="form-control" id="cpas" name="npwd1" required/>
                 </div>
                 <div class="form-group">
                     <input type="submit" class="btn btn-warning mt-2" value="Change Password" id="sbbtn" required />
@@ -30,7 +30,7 @@
         </div>
     </div>
 </div>
-<script>
+<!-- <script>
     function check_pass() {
         let p = $("#pas").val();
         let cp = "#cpas".val();
@@ -57,5 +57,5 @@
             //   $("#sbbtn").attr("disabled", "disabled");
         }
     }
-</script>
+</script> -->
 {% endblock %}
