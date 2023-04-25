@@ -90,7 +90,7 @@ def Profile(request,userid):
     return render(request,'profile.html',{'customers':customers})
 
 def profile_update(request,userid):
-    if request.method == "POST":
+    if request.method == 'POST':
         username = request.POST['username']
         firstname = request.POST['firstname']
         lastname = request.POST['lastname']
@@ -99,39 +99,72 @@ def profile_update(request,userid):
         address = request.POST['address']
         # prof_img = request.FILES['img']
         mobile_no = request.POST['phone']
-       
-        # Update Data
+        Users.profileupdate(
+            userid=userid,
+            username=username,
+            firstname=firstname,
+            lastname=lastname,
+            email=email,
+            dob=dob,
+            address=address,
+            mobile_no=mobile_no
+        )
         custom = Users.objects.get(userid = userid)
         print(custom,'custom')
-        custom1 = User.objects.filter(username=custom.username).values('id').first()['id'] #For User Id Get and Filter By CustomUsername
+        custom1 = User.objects.filter(email=email).values('id').first()['id'] 
         user = User.objects.get(id=custom1) # For Get Default Id to CustomId
-        print(custom1)
         user.username = username
         user.save()
+        print(user,'user')
+        # User.objects.filter(username=custom).update(username=username)
         messages.success(request, 'Your profile Updated!')
-
-        custom.username = username
-        custom.firstname = firstname
-        custom.lastname = lastname
-        custom.email = email
-        custom.dob = dob
-        custom.address = address
-        custom.mobile_no = mobile_no
-        # custom.prof_img = prof_img
-        custom.save()
-        messages.success(request, 'Your profile Updated!')
-
-        #For User Id Get and Filter By Email
-
-        # custom1 = User.objects.filter(email=email).values('id').first()['id'] 
-        # user = User.objects.get(id=custom1) # For Get Default Id to CustomId
-        # user.username = username
-        # user.save()
-        # print(custom1)
-        return redirect('home')
+        return redirect('profile/<int:userid>')
     else:
         messages.error(request, 'Your Profile not Change!')
-        return redirect('home')
+        return redirect('profile')
+
+    # if request.method == "POST":
+    #     username = request.POST['username']
+    #     firstname = request.POST['firstname']
+    #     lastname = request.POST['lastname']
+    #     email = request.POST['email']
+    #     dob = request.POST['dob']
+    #     address = request.POST['address']
+    #     # prof_img = request.FILES['img']
+    #     mobile_no = request.POST['phone']
+       
+    #     # Update Data
+    #     custom = Users.objects.get(userid = userid)
+    #     print(custom,'custom')
+    #     custom1 = User.objects.filter(username=custom.username).values('id').first()['id'] #For User Id Get and Filter By CustomUsername
+    #     user = User.objects.get(id=custom1) # For Get Default Id to CustomId
+    #     print(custom1)
+    #     user.username = username
+    #     user.save()
+    #     messages.success(request, 'Your profile Updated!')
+
+    #     custom.username = username
+    #     custom.firstname = firstname
+    #     custom.lastname = lastname
+    #     custom.email = email
+    #     custom.dob = dob
+    #     custom.address = address
+    #     custom.mobile_no = mobile_no
+    #     # custom.prof_img = prof_img
+    #     custom.save()
+    #     messages.success(request, 'Your profile Updated!')
+
+    #     #For User Id Get and Filter By Email
+
+    #     # custom1 = User.objects.filter(email=email).values('id').first()['id'] 
+    #     # user = User.objects.get(id=custom1) # For Get Default Id to CustomId
+    #     # user.username = username
+    #     # user.save()
+    #     # print(custom1)
+    #     return redirect('home')
+    # else:
+    #     messages.error(request, 'Your Profile not Change!')
+    #     return redirect('home')
     # return render(request,'home.html')
 
 def Lists(request):
@@ -190,11 +223,7 @@ def Delete(request, userid):
 
 def ChangePass(request,userid):
     context = {}
-    # ch = Users.objects.filter(userid=userid)
-    
-    # if len(ch) > 0:
     data = Users.objects.get(userid=userid)
-    # print(data,'data')
     context["data"] = data
 
     if request.method == "POST":
@@ -221,31 +250,7 @@ def ChangePass(request,userid):
             
             context["msz"] = "Incorrect current password"
             context["col"] = "alert-danger"
-            return render(request, 'changepass.html')
-
-            
-           
-        # check1 = data.check_password(current)
-        # print(check1,check)
-
-    #     if check or check1 == True:
-    #         data.set_password(new_pas)
-    #         data.save()
-    #         user1.set_password(new_pas)
-    #         user1.save()
-    #         context["msz"] = "Password Changed"
-    #         context["col"] = "alert-success"
-    #         user = User.objects.filter(username=user1)
-    #         print(user,'users2')
-    #         users = Users.objects.filter(username=data)
-    #         print(users,'users')
-    #         return redirect('home')
-    #     else:
-    #         context["msz"] = "Incorrect current password"
-    #         context["col"] = "alert-danger"
-    #         return render(request, 'changepass.html')
-
-            
+        return render(request, 'changepass.html')            
     return render(request, 'changepass.html')
 
 

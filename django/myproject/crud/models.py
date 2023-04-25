@@ -32,21 +32,32 @@ class Users(models.Model):
     #     return u
 
     @classmethod
-    def update_profile(cls,userid, username, firstname, lastname, email, dob, address, mobile_no, prof_img):
-        pro = cls.objects.filter(userid = userid)
-        pro = pro.first()
-       
-        pro.username = username
-        pro.firstname = firstname
-        pro.lastname = lastname
-        pro.email = email
-        pro.dob = dob
-       
-        pro.address = address
-        pro.mobile_no = mobile_no
-        pro.prof_img = prof_img
-        pro.save()
-        return pro
+    def profileupdate(cls, userid,username,firstname, lastname, email, dob, address, mobile_no):
+        prof = cls.objects.filter(userid=userid)
+        prof = prof.first()
+        prof.username = username
+        prof.firstname = firstname
+        prof.lastname = lastname
+        prof.email = email
+        prof.dob = dob
+        prof.address = address
+        prof.mobile_no = mobile_no
+        prof.save()
+        return prof
+    
+    # def update_profile(cls,userid, username, firstname, lastname, email, dob, address, mobile_no, prof_img):
+    #     pro = cls.objects.filter(userid = userid)
+    #     pro = pro.first()
+    #     pro.username = username
+    #     pro.firstname = firstname
+    #     pro.lastname = lastname
+    #     pro.email = email
+    #     pro.dob = dob
+    #     pro.address = address
+    #     pro.mobile_no = mobile_no
+    #     pro.prof_img = prof_img
+    #     pro.save()
+    #     return pro
     
     @classmethod
     def update_pass(cls,userid,pass1):
@@ -61,14 +72,14 @@ class Users(models.Model):
         
     #     self._pass1 = pass1
  
-    def check_password(self, pass1):
-        def Setter(pass1):
-            print(pass1,'pass1')
-            self.set_password(pass1)
-            # Password hash upgrades shouldn't be considered password changes.
-            self._pass1 = pass1
-            self.save(update_fields=["pass1"])
-        return check_password(pass1, self.pass1, Setter)
+    # def check_password(self, pass1):
+    #     def Setter(pass1):
+    #         print(pass1,'pass1')
+    #         self.set_password(pass1)
+    #         # Password hash upgrades shouldn't be considered password changes.
+    #         self._pass1 = pass1
+    #         self.save(update_fields=["pass1"])
+    #     return check_password(pass1, self.pass1, Setter)
 
     def __str__(self):
         return self.username
