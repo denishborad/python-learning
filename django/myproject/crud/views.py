@@ -1,16 +1,17 @@
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-
 from myproject.settings import SESSION_COOHIE_AGE
-from .models import contactus, Users, LinkGenerate
+from .models import contactus, Users, LinkGenerate, Session
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from datetime import datetime, timedelta
 import secrets
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password,check_password
+
 
 
 # Create your views here.
@@ -20,9 +21,7 @@ def Index(request):
 def Home(request):
     if 'username' in request.session:
         username = request.session['username']
-        print(username,'Hello1')
         customer = Users.objects.filter(username=username).values('userid').first()['userid']
-        print(customer,SESSION_COOHIE_AGE)
         return render(request,'home.html', {"customer":customer})
     else:
         messages.success(request, "Welcome To The Index Page")
@@ -42,7 +41,6 @@ def Signup(request):
         else:
             sign = User.objects.create_user(username,email,pass1)
             sign.save()
-            
             signup = Users(username=username,firstname=firstname,lastname=lastname,email=email,pass1=pass1,prof_img=prof_img)
             signup.save()
 
@@ -54,10 +52,14 @@ def Login(request):
     if request.method == 'POST':
         username = request.POST['username']
         pass1 = request.POST['password']
+        token = secrets.token_hex() 
         request.session['username'] = username
-        print(username,'Hello')
+        request.session['token'] = token
+        user = Users.objects.get(username=username)
+        user1 = Users.objects.filter(username=user).values('email').first()['email']
+        sessions = Session(email=user1, token=token, user=user)
+        sessions.save()
         us = authenticate (request, username=username, password=pass1)
-        print(us)
         if us is not None:
             login(request, us)
             messages.success(request, "Successfully Login!")
@@ -69,22 +71,25 @@ def Login(request):
     return render(request, 'login.html')
 
 def Logout(request):
-    logout(request)
     try:
-        del request.session['userid']
-        messages.info(request, "Your Session ID has been deleted!")
-        return redirect('login')
+        if 'token' in request.session :
+            token = request.session['token']
+            print(token)
+            customer = Session.objects.filter(token=token).values('session_id').first()['session_id']
+            print(customer)
+            Session.objects.filter(session_id=customer).update(session_status=1)
+            Session.objects.filter(session_id=customer).update(is_deleted=1)
+            messages.info(request, "Logged out successfully!")
+            return redirect('login')
     except KeyError:
         messages.success(request, "Logged out successfully!")
     return redirect('index')
 
 def Profile(request,userid):
     customers = Users.objects.get(userid=userid)
-    print("user id of cust",customers.userid)
     return render(request,'profile.html',{'customers':customers})
 
 def profile_update(request,userid):
-    print("user id",userid,type(userid))
     if request.method == "POST":
         username = request.POST['username']
         firstname = request.POST['firstname']
@@ -97,13 +102,13 @@ def profile_update(request,userid):
        
         # Update Data
         custom = Users.objects.get(userid = userid)
+        print(custom,'custom')
         custom1 = User.objects.filter(username=custom.username).values('id').first()['id'] #For User Id Get and Filter By CustomUsername
         user = User.objects.get(id=custom1) # For Get Default Id to CustomId
+        print(custom1)
         user.username = username
         user.save()
         messages.success(request, 'Your profile Updated!')
-        print(custom1)
-        print(custom)
 
         custom.username = username
         custom.firstname = firstname
@@ -131,7 +136,7 @@ def profile_update(request,userid):
 
 def Lists(request):
     customers = Users.objects.filter(is_delete=0).all()
-    paginator = Paginator(customers, 1)
+    paginator = Paginator(customers, 3)
     page_number = request.GET.get('page')
     customers = paginator.get_page(page_number)
     lastpage = customers.paginator.num_pages
@@ -146,7 +151,7 @@ def Lists(request):
 
 def Edits(request, userid):
     customers = Users.objects.get(userid = userid)
-    print(customers)
+    # print(customers)
     contact = {
         'customers':customers
     }
@@ -167,7 +172,6 @@ def UpdateRecord(request, userid):
         empl.email = email
         empl.prof_img = prof_img
         empl.save()
-        # empl = Users.objects.filter(userid=userid).update(is_delete=0)
         messages.success(request, 'Your profile Updated!')
         return redirect('lists')
     else:
@@ -186,55 +190,61 @@ def Delete(request, userid):
 
 def ChangePass(request,userid):
     context = {}
-    ch = Users.objects.filter(userid=userid).values('userid').first()['userid']
-    print('ch', ch)
-    if ch > 0:
-        data = Users.objects.get(userid=userid)
-        context["data"] = data
-        print('data',data)
-        print('context', context)
+    # ch = Users.objects.filter(userid=userid)
+    
+    # if len(ch) > 0:
+    data = Users.objects.get(userid=userid)
+    # print(data,'data')
+    context["data"] = data
 
     if request.method == "POST":
         current = request.POST["cpwd"]
         new_pas = request.POST["npwd"]
         new_pas1 = request.POST["npwd1"]
-        print(current,new_pas,new_pas1)
         if new_pas != new_pas1:
             messages.error(request, "Your New Password Not Same!")
         
-        # user = Users.objects.get(userid=userid)
-        # print(user)
-        user1 = User.objects.filter(username=data.username).values('id').first()['id']
-        user2 = User.objects.get(id = user1)
-        un = user2.username
-        unn = data.username
-        print('user2',user2)
-        print('user1',user1)
-        print('un', un)
-        print('unn', unn)
-        check = user2.check_password(current)
-        check1 = data.check_password(current)
-        print('check', check)
-        print('check1', check1)
         
-        if check and check1 == True:
-            data.set_password(new_pas)
+        user1 = User.objects.get(username=data.username)
+         
+        check = check_password(current,user1.password)
+        
+        if check == True:
+             
+            passw = make_password(new_pas)
+            data.pass1=passw
             data.save()
-            user2.set_password(new_pas)
-            user2.save()
-            context["msz"] = "Password Changed"
-            context["col"] = "alert-success"
-            user = User.objects.filter(username=un)
-            print(user,'users2')
-            users = Users.objects.filter(username=unn)
-            print(users, 'users')
-            login(request, user)
-            login(request, users)
+            user1.set_password(passw)    
+            user1.save()
             return redirect('home')
         else:
+            
             context["msz"] = "Incorrect current password"
             context["col"] = "alert-danger"
             return render(request, 'changepass.html')
+
+            
+           
+        # check1 = data.check_password(current)
+        # print(check1,check)
+
+    #     if check or check1 == True:
+    #         data.set_password(new_pas)
+    #         data.save()
+    #         user1.set_password(new_pas)
+    #         user1.save()
+    #         context["msz"] = "Password Changed"
+    #         context["col"] = "alert-success"
+    #         user = User.objects.filter(username=user1)
+    #         print(user,'users2')
+    #         users = Users.objects.filter(username=data)
+    #         print(users,'users')
+    #         return redirect('home')
+    #     else:
+    #         context["msz"] = "Incorrect current password"
+    #         context["col"] = "alert-danger"
+    #         return render(request, 'changepass.html')
+
             
     return render(request, 'changepass.html')
 
@@ -339,11 +349,11 @@ def PassResetConfirm(reqeust, token):
                         userid=myuserid).update(**update_pass)
                     print('Users',update_pass)
 
-                    # update_status = {
-                    #     'status': 0
-                    # }
+                    update_status = {
+                        'status': 0
+                    }
 
-                    # pass_reset_data.update(**update_status)
+                    pass_reset_data.update(**update_status)
                     return redirect('pass_reset_complete')
 
         else:
@@ -368,3 +378,7 @@ def ContactUs(request):
 
 def About(request):
     return render(request, 'about.html')
+
+def json(request):
+    data = list(Users.objects.values())
+    return JsonResponse(data, safe=False)

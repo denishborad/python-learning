@@ -23,6 +23,7 @@ urlpatterns = [
     path('pass-reset-complete/', views.PassResetComplete, name='pass_reset_complete'),
     path('contact-us/', views.ContactUs, name='contact'),
     path('about/', views.About, name='about'),
+    path('json/',views.json, name='json'),
 
 ]
 if settings.DEBUG:
