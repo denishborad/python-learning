@@ -2,7 +2,6 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-from myproject.settings import SESSION_COOHIE_AGE
 from .models import contactus, Users, LinkGenerate, Session
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
@@ -90,6 +89,7 @@ def Profile(request,userid):
     return render(request,'profile.html',{'customers':customers})
 
 def profile_update(request,userid):
+    custom = Users.objects.get(userid = userid)
     if request.method == 'POST':
         username = request.POST['username']
         firstname = request.POST['firstname']
@@ -97,8 +97,10 @@ def profile_update(request,userid):
         email = request.POST['email']
         dob = request.POST['dob']
         address = request.POST['address']
-        # prof_img = request.FILES['img']
         mobile_no = request.POST['phone']
+        if len(request.FILES) != 0 :
+            custom.prof_img = request.FILES['img']
+        request.session['username']=username
         Users.profileupdate(
             userid=userid,
             username=username,
@@ -107,10 +109,10 @@ def profile_update(request,userid):
             email=email,
             dob=dob,
             address=address,
-            mobile_no=mobile_no
+            mobile_no=mobile_no,
+            prof_img=custom.prof_img
         )
-        custom = Users.objects.get(userid = userid)
-        print(custom,'custom')
+
         custom1 = User.objects.filter(email=email).values('id').first()['id'] 
         user = User.objects.get(id=custom1) # For Get Default Id to CustomId
         user.username = username
@@ -118,7 +120,7 @@ def profile_update(request,userid):
         print(user,'user')
         # User.objects.filter(username=custom).update(username=username)
         messages.success(request, 'Your profile Updated!')
-        return redirect('profile/<int:userid>')
+        return redirect('home')
     else:
         messages.error(request, 'Your Profile not Change!')
         return redirect('profile')
@@ -211,9 +213,9 @@ def UpdateRecord(request, userid):
         messages.error(request, 'Your Profile not Change!')
         return redirect('lists')
 
-# def delete(request, emp_id):
-#     Employee.objects.filter(emp_id=emp_id).delete()
-#     return render(request,"create.html")
+# def Delete(request, userid):
+#     Users.objects.filter(userid=userid).delete()
+#     return redirect("lists")
 
 
 def Delete(request, userid):
@@ -386,4 +388,5 @@ def About(request):
 
 def json(request):
     data = list(Users.objects.values())
+    print(data)
     return JsonResponse(data, safe=False)

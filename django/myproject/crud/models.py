@@ -32,7 +32,7 @@ class Users(models.Model):
     #     return u
 
     @classmethod
-    def profileupdate(cls, userid,username,firstname, lastname, email, dob, address, mobile_no):
+    def profileupdate(cls, userid,username,firstname, lastname, email, dob, address, mobile_no, prof_img):
         prof = cls.objects.filter(userid=userid)
         prof = prof.first()
         prof.username = username
@@ -42,6 +42,7 @@ class Users(models.Model):
         prof.dob = dob
         prof.address = address
         prof.mobile_no = mobile_no
+        prof.prof_img = prof_img
         prof.save()
         return prof
     
