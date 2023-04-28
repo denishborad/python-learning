@@ -12,23 +12,24 @@ def get_data(id= None):
     res = requests.get(url = URL, headers=headers, data = json_data)
     data = res.json()
     print(data)
-# get_data()
+get_data()
 
 def post_data():
     data ={'name':'Deenish',
-        'roll':16,
+        'roll':1,
         'city':'rajkot'}
     headers = {'content-Type':'application/json'}
     json_data = json.dumps(data)
     res = requests.post(url=URL, headers=headers, data=json_data)
     data = res.json()
     print(data)
-post_data()
+# post_data()
 
 def update_data():
-    data ={'id': 3,
+    data ={'id': 16,
         'name':'denish',
-        'city':'rajkot'}
+        'roll': '9',
+        'city':'botad'}
     headers = {'content-Type':'application/json'}
     json_data = json.dumps(data)
     res = requests.put(url=URL, headers=headers, data=json_data)
@@ -37,10 +38,10 @@ def update_data():
 # update_data()
 
 def delete_data():
-    data ={'id': 17}
+    data ={'id': 18}
     headers = {'content-Type':'application/json'}
     json_data = json.dumps(data)
     res = requests.delete(url=URL, headers=headers, data=json_data)
     data = res.json()
     print(data)
-# delete_data()
+delete_data()

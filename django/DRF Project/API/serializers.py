@@ -23,12 +23,12 @@ class StudentSerializer(serializers.ModelSerializer):
     #     return value                                                  # Ture Code
     
     # Object Level Validation
-    def validate(self, data):
-        nm = data.get('name')
-        ct = data.get('city')
-        if nm.lower() == 'denish' and ct.lower() != 'rajkot':
-            raise serializers.ValidationError('City must be Rajkot')
-        return data
+    # def validate(self, data):
+    #     nm = data.get('name')
+    #     ct = data.get('city')
+    #     if nm.lower() == 'denish' and ct.lower() != 'rajkot':
+    #         raise serializers.ValidationError('City must be Rajkot')
+    #     return data
 
 # Non-Model serializers                                             # Ture Code
 # # validators
