@@ -12,7 +12,7 @@ class StudentSerializer(serializers.ModelSerializer):
     # name = serializers.CharField(read_only=True)                      # Ture Code
     class Meta:
         model = Student
-        fields = ['name', 'roll', 'city']
+        fields = ['id', 'name', 'roll', 'city']
         # read_only_fields = ['name', 'roll']                           # Ture Code
         # extra_kwargs = {'name':{'read_only':True}}                    # Ture Code
 

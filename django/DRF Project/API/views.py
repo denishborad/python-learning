@@ -12,6 +12,15 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+
+# class StudentLIstCreate(ListCreateAPIView):
+#     queryset = Student.objects.all()
+#     serializer_class = StudentSerializer
+
+# class StudentRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
+#     queryset = Student.objects.all()
+#     serializer_class = StudentSerializer
 
 # Class Base Views
 # class Student_api(APIView):
@@ -71,9 +80,11 @@ def Student_Api(request,pk = None):
         if id is not None:
             stu = Student.objects.get(id = id)
             serializer = StudentSerializer(stu)
+            print(serializer)
             return Response(serializer.data)
         stu = Student.objects.all()
         serializer = StudentSerializer(stu, many=True)
+        print(serializer)
         return Response(serializer.data)
 
     if request.method == 'POST':
@@ -101,7 +112,7 @@ def Student_Api(request,pk = None):
         if serializer.is_valid():
             serializer.save()
             return Response({'msg':'Partial Data Updated!!'}, status=status.HTTP_206_PARTIAL_CONTENT)
-        return Response(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     if request.method == 'DELETE':
         # id = request.data.get('id')

@@ -26,4 +26,6 @@ urlpatterns = [
     # path('studentapi/', views.hello_world),
     path('studentapi/', views.Student_Api),
     path('studentapi/<int:pk>', views.Student_Api),
+    # path('studentapi/', views.StudentLIstCreate.as_view()),
+    # path('studentapi/<int:pk>', views.StudentRetrieveUpdateDestroy.as_view()),
 ]
