@@ -1,5 +1,7 @@
 {% extends "base.html" %} 
-{% block title %}Edit Details{% endblock %}
+{% block edit_detail_link %}
+{% block title.instance.get_absolute_url %}<li><a href="{% url 'lists' %}">Edit</a></li>{% endblock %}
+{% endblock %}
 {% block content %}
 
 <div class="container">

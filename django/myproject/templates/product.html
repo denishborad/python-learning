@@ -1,4 +1,10 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+
+{% block product_detail_link %}
+{% block title.instance.get_absolute_url %}<li><a href="{% url 'product' %}">Products</a></li>{% endblock %}
+{% endblock %}
+
+{% block content %}
 <!-- product section start -->
 <div class="product_section layout_padding">
   <div class="container">

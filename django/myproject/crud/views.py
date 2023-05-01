@@ -1,6 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import contactus, Users, LinkGenerate, Session
 from django.contrib.auth.models import User
@@ -9,21 +9,30 @@ from datetime import datetime, timedelta
 import secrets
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
-from django.contrib.auth.hashers import make_password,check_password
-
+from django.contrib.auth.hashers import make_password, check_password
 
 
 # Create your views here.
 def Index(request):
     return render(request, 'index.html')
 
+
 def Home(request):
     if 'username' in request.session:
         username = request.session['username']
-        customer = Users.objects.filter(username=username).values('userid').first()['userid']
-        return render(request,'home.html', {"customer":customer})
+        customer = Users.objects.filter(
+            username=username).values('userid').first()['userid']
+
+        context = {
+            "customer": customer,
+            "breadcrum": {
+                "Home": "/"
+            }
+        }
+        return render(request, 'home.html', context)
     else:
         messages.success(request, "Welcome To The Index Page")
+
 
 def Signup(request):
     if request.method == 'POST':
@@ -33,32 +42,36 @@ def Signup(request):
         email = request.POST['email']
         pass1 = request.POST['password1']
         pass2 = request.POST['password2']
-        prof_img = request.FILES['img'] 
+        prof_img = request.FILES['img']
         if pass1 != pass2:
-            messages.error(request, 'Please chack!! Your Both Password Are Same??')
+            messages.error(
+                request, 'Please chack!! Your Both Password Are Same??')
             return redirect('signup')
         else:
-            sign = User.objects.create_user(username,email,pass1)
+            sign = User.objects.create_user(username, email, pass1)
             sign.save()
-            signup = Users(username=username,firstname=firstname,lastname=lastname,email=email,pass1=pass1,prof_img=prof_img)
+            signup = Users(username=username, firstname=firstname,
+                           lastname=lastname, email=email, pass1=pass1, prof_img=prof_img)
             signup.save()
 
             messages.success(request, 'Sign Up Successfully!!')
             return redirect('login')
     return render(request, 'signup.html')
 
+
 def Login(request):
     if request.method == 'POST':
         username = request.POST['username']
         pass1 = request.POST['password']
-        token = secrets.token_hex() 
+        token = secrets.token_hex()
         request.session['username'] = username
         request.session['token'] = token
         user = Users.objects.get(username=username)
-        user1 = Users.objects.filter(username=user).values('email').first()['email']
+        user1 = Users.objects.filter(
+            username=user).values('email').first()['email']
         sessions = Session(email=user1, token=token, user=user)
         sessions.save()
-        us = authenticate (request, username=username, password=pass1)
+        us = authenticate(request, username=username, password=pass1)
         if us is not None:
             login(request, us)
             messages.success(request, "Successfully Login!")
@@ -69,27 +82,41 @@ def Login(request):
             return redirect('login')
     return render(request, 'login.html')
 
+
 def Logout(request):
     try:
-        if 'token' in request.session :
+        if 'token' in request.session:
             token = request.session['token']
             print(token)
-            customer = Session.objects.filter(token=token).values('session_id').first()['session_id']
+            customer = Session.objects.filter(token=token).values(
+                'session_id').first()['session_id']
             print(customer)
-            Session.objects.filter(session_id=customer).update(session_status=1)
+            logout(request)
+            Session.objects.filter(
+                session_id=customer).update(session_status=1)
             Session.objects.filter(session_id=customer).update(is_deleted=1)
             messages.info(request, "Logged out successfully!")
-            return redirect('login')
+            return redirect('index')
     except KeyError:
         messages.success(request, "Logged out successfully!")
     return redirect('index')
 
-def Profile(request,userid):
-    customers = Users.objects.get(userid=userid)
-    return render(request,'profile.html',{'customers':customers})
 
-def profile_update(request,userid):
-    custom = Users.objects.get(userid = userid)
+def Profile(request, userid):
+    customers = Users.objects.get(userid=userid)
+
+    context = {
+        'customers': customers,
+        "breadcrum": {
+            "Home": "/",
+            "Profile": 'profile'+'/'+str(customers.userid)
+        }
+    }
+    return render(request, 'profile.html', context)
+
+
+def profile_update(request, userid):
+    custom = Users.objects.get(userid=userid)
     if request.method == 'POST':
         username = request.POST['username']
         firstname = request.POST['firstname']
@@ -98,9 +125,9 @@ def profile_update(request,userid):
         dob = request.POST['dob']
         address = request.POST['address']
         mobile_no = request.POST['phone']
-        if len(request.FILES) != 0 :
+        if len(request.FILES) != 0:
             custom.prof_img = request.FILES['img']
-        request.session['username']=username
+        request.session['username'] = username
         Users.profileupdate(
             userid=userid,
             username=username,
@@ -113,11 +140,11 @@ def profile_update(request,userid):
             prof_img=custom.prof_img
         )
 
-        custom1 = User.objects.filter(email=email).values('id').first()['id'] 
-        user = User.objects.get(id=custom1) # For Get Default Id to CustomId
+        custom1 = User.objects.filter(email=email).values('id').first()['id']
+        user = User.objects.get(id=custom1)  # For Get Default Id to CustomId
         user.username = username
         user.save()
-        print(user,'user')
+        print(user, 'user')
         # User.objects.filter(username=custom).update(username=username)
         messages.success(request, 'Your profile Updated!')
         return redirect('home')
@@ -134,7 +161,7 @@ def profile_update(request,userid):
     #     address = request.POST['address']
     #     # prof_img = request.FILES['img']
     #     mobile_no = request.POST['phone']
-       
+
     #     # Update Data
     #     custom = Users.objects.get(userid = userid)
     #     print(custom,'custom')
@@ -158,7 +185,7 @@ def profile_update(request,userid):
 
     #     #For User Id Get and Filter By Email
 
-    #     # custom1 = User.objects.filter(email=email).values('id').first()['id'] 
+    #     # custom1 = User.objects.filter(email=email).values('id').first()['id']
     #     # user = User.objects.get(id=custom1) # For Get Default Id to CustomId
     #     # user.username = username
     #     # user.save()
@@ -168,6 +195,7 @@ def profile_update(request,userid):
     #     messages.error(request, 'Your Profile not Change!')
     #     return redirect('home')
     # return render(request,'home.html')
+
 
 def Lists(request):
     customers = Users.objects.filter(is_delete=0).all()
@@ -179,18 +207,28 @@ def Lists(request):
     context = {
         'customers': customers,
         'lastpage': lastpage,
-        'pagelist': [n+1 for n in range(lastpage)]
+        'pagelist': [n+1 for n in range(lastpage)],
+        "breadcrum": {
+            "Home": "/",
+            "Lists": "lists"
+        }
     }
 
     return render(request, 'lists.html', context)
 
+
 def Edits(request, userid):
-    customers = Users.objects.get(userid = userid)
+    customers = Users.objects.get(userid=userid)
     # print(customers)
     contact = {
-        'customers':customers
+        'customers': customers,
+        "breadcrum": {
+            "Home": "/",
+            "Lists": "lists",
+            "Edit": "edit",
+        }
     }
-    return render(request,"edit.html", contact)
+    return render(request, "edit.html", contact)
 
 
 def UpdateRecord(request, userid):
@@ -200,7 +238,7 @@ def UpdateRecord(request, userid):
         lastname = request.POST['lastname']
         email = request.POST['email']
         prof_img = request.FILES['img']
-        empl = Users.objects.get(userid = userid)
+        empl = Users.objects.get(userid=userid)
         empl.username = username
         empl.firstname = firstname
         empl.lastname = lastname
@@ -223,9 +261,15 @@ def Delete(request, userid):
     messages.success(request, "User Deleted")
     return redirect('lists')
 
-def ChangePass(request,userid):
-    context = {}
+
+def ChangePass(request, userid):
     data = Users.objects.get(userid=userid)
+    context = {
+        "breadcrum": {
+            "Home": "/",
+            "ChangePassword": 'changepass'+'/'+str(data.userid),
+        }
+    }
     context["data"] = data
 
     if request.method == "POST":
@@ -234,30 +278,36 @@ def ChangePass(request,userid):
         new_pas1 = request.POST["npwd1"]
         if new_pas != new_pas1:
             messages.error(request, "Your New Password Not Same!")
-        
-        
+
         user1 = User.objects.get(username=data.username)
-         
-        check = check_password(current,user1.password)
-        
+
+        check = check_password(current, user1.password)
+
         if check == True:
-             
+
             passw = make_password(new_pas)
-            data.pass1=passw
+            data.pass1 = passw
             data.save()
-            user1.set_password(passw)    
+            user1.set_password(passw)
             user1.save()
             return redirect('home')
         else:
-            
+
             context["msz"] = "Incorrect current password"
             context["col"] = "alert-danger"
-        return render(request, 'changepass.html')            
+        return render(request, 'changepass.html')
     return render(request, 'changepass.html')
 
 
 def Product(request):
-    return render(request, 'product.html')
+    context = {
+        "breadcrum": {
+            "Home": "/",
+            "Product": "product"
+        }
+    }
+    return render(request, 'product.html', context)
+
 
 def PassReset(request):
     if request.method == 'POST':
@@ -270,9 +320,9 @@ def PassReset(request):
 
         if associated_user.exists():
             id = associated_user.values('userid').first()['userid']
-            print(id,'id')
+            print(id, 'id')
             user = Users.objects.exclude(is_delete=1).get(pk=id)
-            print(user,'user')
+            print(user, 'user')
 
             Subject = "Request For Password Reset!"
             text_template = "pass_reset_email.txt"
@@ -304,8 +354,10 @@ def PassReset(request):
         return redirect('pass_reset_done')
     return render(request, 'pass_reset.html')
 
+
 def PassResetDone(request):
     return render(request, 'pass_reset_done.html')
+
 
 def PassResetConfirm(reqeust, token):
     # utoken = request.GET.get('token')
@@ -354,7 +406,7 @@ def PassResetConfirm(reqeust, token):
 
                     Users.objects.filter(
                         userid=myuserid).update(**update_pass)
-                    print('Users',update_pass)
+                    print('Users', update_pass)
 
                     update_status = {
                         'status': 0
@@ -367,8 +419,10 @@ def PassResetConfirm(reqeust, token):
             return redirect('pass_reset')
     return render(reqeust, 'pass_reset_confirm.html')
 
+
 def PassResetComplete(request):
     return render(request, 'pass_reset_complete.html')
+
 
 def ContactUs(request):
     if request.method == "POST":
@@ -383,8 +437,10 @@ def ContactUs(request):
     return render(request, 'contactus.html')
     return render(request, 'contactus.html')
 
+
 def About(request):
     return render(request, 'about.html')
+
 
 def json(request):
     data = list(Users.objects.values())
