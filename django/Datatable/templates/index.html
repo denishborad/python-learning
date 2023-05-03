@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block body %}
+<hr style="border-top: 2px solid #000; clear: both;">
+<table class="table table-bordered" id="myTable">
+    <thead class="alert-warning">
+        <tr>
+            <th>Sr no</th>
+            <th>FirstName</th>
+            <th>LastName</th>
+            <th>Address</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+
+        </tr>
+    </tbody>
+</table>
+
+
+<script>
+    $(document).ready(function () {
+
+        $('#myTable').DataTable({
+
+
+            "ajax": "list",
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            lengthChange: true,
+            orderable: true,
+            statesave: true,
+            pageLength: 5,
+            lengthMenu: [5, 10, 20],
+            pagingType: "full_numbers",
+            searching: true,
+
+            columnDefs: [
+                {
+                    targets: "_all",
+                    defaultContent: {
+
+                    },
+                }
+
+            ],
+
+            columns: [
+
+                {
+                    data: "sr_no",
+                    orderable: true
+                },
+                {
+                    data: "firstname",
+                    orderable: false
+                },
+                {
+                    data: "lastname",
+                    orderable: false
+                },
+                {
+                    data: "address",
+                    orderable: false
+                },
+                {
+                    data: "action",
+                    orderable: false
+                }
+            ]
+
+
+        });
+
+    });
+
+
+</script>
+{% endblock %}
