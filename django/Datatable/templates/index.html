@@ -37,10 +37,11 @@
             lengthMenu: [5, 10, 20],
             pagingType: "full_numbers",
             searching: true,
+            order: [[1, 'desc']],
 
             columnDefs: [
                 {
-                    targets: "_all",
+                     
                     defaultContent: {
 
                     },
@@ -52,11 +53,13 @@
 
                 {
                     data: "sr_no",
-                    orderable: true
-                },
+                    orderable: false
+
+                 },
                 {
                     data: "firstname",
-                    orderable: false
+                    orderable: true
+                   
                 },
                 {
                     data: "lastname",

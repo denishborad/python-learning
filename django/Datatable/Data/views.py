@@ -25,7 +25,7 @@ def index(request):
     sort_value       =       str(request.GET['order[0][dir]'])
     limit            =       int(request.GET['length']) 
     column           =       int(request.GET['order[0][column]']) # get column no
-    columns          =       ['firstname']
+    columns          =       ['id','firstname']
     sortable_col     =       str(columns[column])
     my_list          =       [column for i in columns]
 
@@ -34,6 +34,7 @@ def index(request):
 
     # for sorting
     if search   ==  "":
+        print(columns)
         if sort_value   ==      "asc":
             searchh = Member.objects.all().order_by(sortable_col)[offset:limit+offset]
         else:
